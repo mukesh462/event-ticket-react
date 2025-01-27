@@ -25,7 +25,7 @@ import useApi from "./useApi";
     ) => {
       const [batches, setBatches] = useState([]);
       const [currentPage, setCurrentPage] = useState(0);
-      const [itemsPerPage] = useState(5);
+      const [itemsPerPage] = useState(10);
       const [totalItems, setTotalItems] = useState(0);
       const { request } = useApi();
       const [sortConfig, setSortConfig] = useState({
