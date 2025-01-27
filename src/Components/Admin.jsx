@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 import KeyValueTable from "./TableDetails";
 import { useNavigate } from "react-router-dom";
 function Admin() {
-  const apiUrl = "/getAllTicket"; // Replace with your actual API URL
+  const apiUrl = "getAllTicket"; // Replace with your actual API URL
   const [modelOpen, setmodelOpen] = useState(false);
   const [QrReader, setQrReader] = useState(false);
   const [QrReaderView, setQrReaderView] = useState(false);
