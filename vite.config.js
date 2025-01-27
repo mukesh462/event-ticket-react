@@ -8,4 +8,9 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+ 
+    server: {
+      allowedHosts: ['c9ab-116-72-127-11.ngrok-free.app'],
+    },
+    // Other Vite configurations
 })

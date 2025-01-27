@@ -51,7 +51,7 @@ function Login() {
             });
             if (response.status) {
               navigate("/admin");
-              localStorage.setItem('userData',response.data)
+              localStorage.setItem('userData',JSON.stringify(response.data))
               toast.success(response.message);
             
             } else {

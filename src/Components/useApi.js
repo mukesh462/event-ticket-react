@@ -5,7 +5,7 @@ const useApi = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const BaseUrl  = import.meta.env.VITE_REACT_APP_URL;
-  console.log(BaseUrl)
+
   const request = useCallback(async (method, url, data = null, config = {}) => {
     setLoading(true);
     setError(null);

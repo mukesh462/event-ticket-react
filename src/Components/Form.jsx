@@ -6,6 +6,8 @@ import { DateInput, InputField, makeId, SelectField } from "./Fields";
 import { CirclePlus, CircleX, UserRoundPen } from "lucide-react";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
+import useApi from "./useApi";
+import { useNavigate } from "react-router-dom";
 
 export default function RegistrationForm() {
   const initForm = {
@@ -24,10 +26,10 @@ export default function RegistrationForm() {
   };
   const [formValues, setFormValues] = useState(initForm);
   const [isEdit, setisEdit] = useState(false);
-
+  const { request } = useApi();
   const [errors, setErrors] = useState({});
   const [persons, setPersons] = useState([]);
-
+  const navigate = useNavigate();
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
     dob: Yup.string().required("Date of Birth is required"),
@@ -69,69 +71,82 @@ export default function RegistrationForm() {
     }
   };
 
-  const handleSubmit =async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-   if(persons.length > 0){
-    toast.success('watiit')
-   return;
-   }
-   if (await handleValidation()) {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Do you want to submit this form?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, submit it!",
-      cancelButtonText: "Cancel",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: "Submitting...",
-          text: "Please wait while we process your request.",
-          allowOutsideClick: false,
-          didOpen: () => {
-            Swal.showLoading();
-          },
-        });
-
-        try {
-          const apiResponse = await fakeApiCall(formValues);
-
+  
+    const submitForm = async (tickets) => {
+      Swal.fire({
+        title: "Submitting...",
+        text: "Please wait while we process your request.",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+  
+      try {
+        const apiResponse = await request("post", "buy-ticket", { tickets });
+        if (apiResponse.status) {
           Swal.fire({
             icon: "success",
             title: "Success!",
-            allowEscapeKey:false,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
             text: "Form submitted successfully.",
-          }).then(e=>{
+          }).then((e) => {
             if (e.isConfirmed) {
-              n
+              setFormValues(initForm);
+              setPersons([]);
+              localStorage.setItem("tickets", JSON.stringify(apiResponse.data));
+              navigate("/viewTicket");
             }
           });
-
-          setFormValues(initForm);
-
           console.log("API Response:", apiResponse);
-        } catch (error) {
+        } else {
+          const errorMessage = apiResponse.duplicates
+            ? `${apiResponse.message}\n${apiResponse.duplicates.toString()}`
+            : "Something went wrong. Please try again later.";
           Swal.fire({
             icon: "error",
             title: "Submission Failed",
-            text: "Something went wrong. Please try again later.",
+            text: errorMessage,
           });
-
-          console.error("API Call Failed:", error);
+          toast.error(apiResponse.message);
         }
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Submission Failed",
+          text: "Something went wrong. Please try again later.",
+        });
+        console.error("API Call Failed:", error);
       }
-    });
-  }
-  };
-  const fakeApiCall = (data) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve({ success: true, data });
-      }, 2000);
-    });
+    };
+  
+    const confirmSubmission = async (tickets) => {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "Do you want to submit this form?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, submit it!",
+        cancelButtonText: "Cancel",
+      });
+      if (result.isConfirmed) {
+        await submitForm(tickets);
+      }
+    };
+  
+    if (persons.length > 0) {
+      await confirmSubmission(persons);
+    } else if (await handleValidation()) {
+      await confirmSubmission([formValues]);
+    }
   };
   
+
+
   const addPerson = async () => {
     if (await handleValidation()) {
       const existEmail = persons.find((e) => e.email == formValues.email);
@@ -197,7 +212,8 @@ export default function RegistrationForm() {
       }
     });
   };
-
+const tickets =JSON.parse( localStorage.getItem('tickets')) ?? null;
+console.log(tickets)
   return (
     <div
       className="min-h-screen p-5 flex justify-center items-center"
@@ -206,30 +222,36 @@ export default function RegistrationForm() {
         backgroundSize: "cover",
       }}
     >
-      <div className="w-full max-w-6xl bg-white rounded-3xl shadow-lg p-8 relative overflow-hidden">
+      <div className="w-full max-w-6xl bg-white rounded-3xl shadow-lg p-1 md:p-8 relative overflow-hidden">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <img
+        <div className="flex  justify-center md:justify-between items-center gap-3 mb-8">
+          <div>
+               <img
             src={Logo}
             alt="Parambodil Foundation"
-            width={70}
-            height={70}
-            className="object-contain"
+            className="object-contain h-[60px] md:h-[70px]"
           />
-          <div className="text-center flex-1">
-            <h1 className="text-4xl font-bold text-[#F85C2C]">
+          </div>
+       
+          <div className="text-center md:flex-1">
+            <h1 className="text-xl md:text-4xl font-bold text-[#F85C2C]">
               Thaipoosam Event
             </h1>
-            <h2 className="text-2xl mt-2 text-gray-600 pb-3 border-b-3 border-[#F85C2C] inline-block px-4">
+            <h2 className="text-lg md:text-2xl md:mt-2 text-gray-600 pb-3 border-b-3 border-[#F85C2C] inline-block px-4">
               Registration Form
             </h2>
           </div>
-          <div className="w-[100px]" /> {/* Spacer for alignment */}
+          
+          <div className=" md:block" >
+            {
+tickets !=null? (<button className="bg-[#F85C2C] text-white rounded-sm p-1" onClick={()=> navigate('/viewTicket')}>Ticket</button>):null
+            }
+            </div> {/* Spacer for alignment */}
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-6 p-4 pt-0 mx-10 rounded-lg relative">
+          <div className="space-y-6 md:p-4 pt-0 mx-10 rounded-lg relative">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 place-content-baseline">
               <InputField
                 label="Name"
@@ -358,35 +380,41 @@ export default function RegistrationForm() {
               </button>
             </div>
           </div>
-          <div className="">
-            <div className="text-center">
-              <h2 className="text-2xl mt-2 text-center text-gray-600 pb-3 border-b-3 border-[#F85C2C] inline-block px-4">
-                No of Registrations
-              </h2>
-            </div>
-            <div className="flex flex-wrap gap-4 my-6">
-              {persons.map((e, i) => (
-                <div
-                  key={i}
-                  className={`px-6 py-2 flex items-center gap-2  rounded-full bg-[#F85C2C] text-white`}
-                >
-                  <div className="max-w-36 truncate">{e.name}</div>
-                  <div className="flex justify-center items-center gap-1">
-                    <UserRoundPen
-                      className="cursor-pointer"
-                      onClick={() => handleEditPerson(e)}
-                    />
-                    <CircleX
-                      className="cursor-pointer"
-                      onClick={() => handleDeletePerson(e.id)}
-                    />
+          {persons.length > 0 && (
+            <div className="">
+              <div className="text-center">
+                <h2 className="text-2xl mt-2 text-center text-gray-600 pb-3 border-b-3 border-[#F85C2C] inline-block px-4">
+                  No of Registrations{" "}
+                  <span className="bg-[#F85C2C] p-1 text-white rounded-lg px-2 text-sm font-bold">
+                    {persons.length}
+                  </span>
+                </h2>
+              </div>
+              <div className="flex flex-wrap gap-4 my-6">
+                {persons.map((e, i) => (
+                  <div
+                    key={i}
+                    className={`px-6 py-2 flex items-center gap-2  rounded-full bg-[#F85C2C] text-white`}
+                  >
+                    <div className="max-w-36 truncate">{e.name}</div>
+                    <div className="flex justify-center items-center gap-1">
+                      <UserRoundPen
+                        className="cursor-pointer"
+                        onClick={() => handleEditPerson(e)}
+                      />
+                      <CircleX
+                        className="cursor-pointer"
+                        onClick={() => handleDeletePerson(e.id)}
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
+
           {/* Submit Button */}
-          <div className="flex justify-center items-center ">
+          <div className="flex justify-center items-center mb-8 ">
             {isEdit ? (
               <div className="flex gap-2 flex-wrap">
                 <button

@@ -95,8 +95,8 @@ import useApi from "./useApi";
   
       return (
         <div ref={ref} className="min-h-screen p-4 sm:p-6 md:p-8 overflow-x-auto">
-          <Card className="w-full mx-auto shadow-xl border border-[#31ABEB]/20">
-            <CardHeader className="bg-[#31ABEB] text-white rounded-t-lg flex items-center justify-between">
+          <Card className="w-full mx-auto shadow-xl border border-[#F85C2C]/20">
+            <CardHeader className="bg-[#F85C2C] text-white rounded-t-lg flex items-center justify-between">
               <CardTitle className="text-2xl sm:text-3xl font-bold py-4">
                 {title}
               </CardTitle>
@@ -106,11 +106,11 @@ import useApi from "./useApi";
               <div className="bg-white rounded-lg shadow table-container">
                 <Table className="min-w-full">
                   <TableHeader>
-                    <TableRow className="bg-[#31ABEB]/10">
+                    <TableRow className="bg-[#F85C2C]/10">
                       {config.map((col) => (
                         <TableHead
                           key={col.data}
-                          className={`font-semibold text-[#31ABEB] cursor-pointer ${col.className}`}
+                          className={`font-semibold text-[#F85C2C] cursor-pointer ${col.className}`}
                           onClick={() => col.sortable && handleSort(col.data)}
                         >
                           {col.colname}
@@ -125,7 +125,7 @@ import useApi from "./useApi";
                       sortedBatches.map((batch) => (
                         <TableRow
                           key={batch._id} // Use the _id for uniqueness
-                          className="hover:bg-[#31ABEB]/5 transition-colors"
+                          className="hover:bg-[#F85C2C]/5 transition-colors"
                           onClick={() => handleRowClick(batch)}
                         >
                           {config.map((col) => (
@@ -139,7 +139,7 @@ import useApi from "./useApi";
                       <TableRow>
                         <TableCell
                           colSpan={config.length}
-                          className="text-center py-4 text-[#31ABEB]"
+                          className="text-center py-4 text-[#F85C2C]"
                         >
                           No data available
                         </TableCell>
@@ -161,11 +161,11 @@ import useApi from "./useApi";
                   onPageChange={handlePageClick}
                   containerClassName="flex items-center justify-center flex-wrap mt-4 space-x-2 space-y-2"
                   pageClassName="block"
-                  pageLinkClassName="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-[#31ABEB] hover:text-white focus:bg-[#31ABEB] focus:text-white transition-colors duration-300"
-                  previousLinkClassName="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-[#31ABEB] hover:text-white focus:bg-[#31ABEB] focus:text-white transition-colors duration-300"
-                  nextLinkClassName="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-[#31ABEB] hover:text-white focus:bg-[#31ABEB] focus:text-white transition-colors duration-300"
+                  pageLinkClassName="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-[#F85C2C] hover:text-white focus:bg-[#F85C2C] focus:text-white transition-colors duration-300"
+                  previousLinkClassName="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-[#F85C2C] hover:text-white focus:bg-[#F85C2C] focus:text-white transition-colors duration-300"
+                  nextLinkClassName="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-[#F85C2C] hover:text-white focus:bg-[#F85C2C] focus:text-white transition-colors duration-300"
                   breakLinkClassName="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-600"
-                  activeLinkClassName="bg-[#31ABEB] text-black"
+                  activeLinkClassName="bg-[#F85C2C] text-black"
                   disabledClassName="opacity-50 cursor-not-allowed"
                 />
               </div>

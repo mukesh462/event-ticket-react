@@ -48,7 +48,7 @@ const QRReaderWithHtml5Qrcode = ({ isOpen, onClose,callback }) => {
           >
             ✖
           </button>
-          <div id="reader" className="w-full h-64" ref={qrCodeRef}></div>
+          <div id="reader" className="w-full " ref={qrCodeRef}></div>
         
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Logo from "../assets/logo-event.png";
 import { ScanQrCode } from "lucide-react";
 import TableList from "./Table";
@@ -10,12 +10,20 @@ import QRReaderWithHtml5Qrcode from "./QrReader";
 import useApi from "./useApi";
 import toast from "react-hot-toast";
 import KeyValueTable from "./TableDetails";
+import { useNavigate } from "react-router-dom";
 function Admin() {
   const apiUrl = "/getAllTicket"; // Replace with your actual API URL
   const [modelOpen, setmodelOpen] = useState(false);
   const [QrReader, setQrReader] = useState(false);
   const [QrReaderView, setQrReaderView] = useState(false);
   const [ticketData, setticketData] = useState(null);
+  const navigate = useNavigate();
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    if (!userData) {
+      navigate("/login");
+    }
+  }, []);
 
   const { request } = useApi();
   const [data, setdata] = useState({});
@@ -81,12 +89,13 @@ function Admin() {
       sortable: false,
       className: "",
       data: "dob",
+      render:(e)=> <span>{dayjs(e.dob).format("DD-MM-YYYY")}</span>
     },
     {
       colname: "Admit Status",
       sortable: false,
       className: "",
-      data: "dob",
+      data: "admit_status",
       render: (val) =>
         val.admit_status == 1 ? (
           <span className="bg-green-400 text-white p-2">Admit</span>
@@ -104,6 +113,8 @@ function Admin() {
       ),
     },
   ];
+  const tableRef = useRef();
+
   const handleRowSelect = (data) => {
     console.log("Selected Row Data:", data);
     setdata(data);
@@ -131,16 +142,16 @@ function Admin() {
   };
   const changeStatus = async () => {
     try {
+      setticketData(null);
       const response = await request("post", "statusChange", {
         ticket_code: ticketData?.ticket_code,
       });
       if (response.status) {
         toast.success(response.message);
-       
       } else {
         toast.error(response.message);
       }
-      setticketData(null)
+      handleRefresh()
       setQrReader(false);
       setQrReaderView(false);
     } catch (error) {
@@ -148,6 +159,12 @@ function Admin() {
     }
 
     console.log(data, "sdsds");
+  };
+  const handleRefresh = () => {
+    // console.log(tableRef.current)
+    if (tableRef.current) {
+      tableRef.current.useRefresh();
+    }
   };
   return (
     <div className="min-h-screen bg-[#FFE4D6]">
@@ -157,21 +174,23 @@ function Admin() {
           alt="Parambodil Foundation"
           width={70}
           height={70}
-          className="object-contain"
+          className="object-contain cursor-pointer"
+          onClick={()=> navigate('/')}
         />
         <div>
           <ScanQrCode
-            className="h-10 w-10 text-blue-500 cursor-pointer"
+            className="h-10 w-10 text-[#F85C2C] cursor-pointer"
             onClick={() => setQrReader(true)}
           />
         </div>
       </div>
-      <div>
+      <div className="mt-8">
         <TableList
           title="Ticket "
           apiUrl={apiUrl}
           config={config}
           onClickRow={handleRowSelect}
+          ref={tableRef}
         />
       </div>
       <ModalView
@@ -193,7 +212,7 @@ function Admin() {
           className="bg-white m-5 "
         >
           <QRCode
-            size={256}
+            size={200}
             style={{ height: "auto", maxWidth: "100%", width: "100%" }}
             value={data?.ticket_code}
             viewBox={`0 0 256 256`}
@@ -235,7 +254,6 @@ function Admin() {
           </div>
         ) : (
           <div>
-            
             <KeyValueTable data={ticketData} close={setQrReaderView} />
             <div className="flex justify-center items-center mb-5">
               <button
