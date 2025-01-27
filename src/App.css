@@ -1,0 +1,20 @@
+@import "tailwindcss";
+.table-container {
+    overflow-x: auto; /* Enable horizontal scrolling */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    border-radius: 0.5rem; /* Rounded corners */
+  }
+
+  @layer utilities{
+    .badge {
+      @apply inline-flex items-center  text-sm font-semibold rounded px-2 py-2;
+    }
+    
+    .badge-success {
+      @apply text-gray-800 bg-green-100;
+    }
+    
+    .badge-warning {
+      @apply text-yellow-800 bg-yellow-200;
+    }
+}  
