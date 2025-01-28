@@ -394,7 +394,7 @@ tickets !=null? (<button className="bg-[#F85C2C] text-white rounded-sm p-1" onCl
                 {persons.map((e, i) => (
                   <div
                     key={i}
-                    className={`px-6 py-2 flex items-center gap-2  rounded-full bg-[#F85C2C] text-white`}
+                    className={`px-3 py-2 flex items-center gap-4  m-1 rounded-full bg-[#F85C2C] text-white`}
                   >
                     <div className="max-w-36 truncate">{e.name}</div>
                     <div className="flex justify-center items-center gap-1">

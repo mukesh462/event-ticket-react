@@ -12,13 +12,15 @@ function ViewTicket() {
   return (
     <div className="min-h-screen flex justify-start mt-10 items-center flex-col">
     <h1 className="text-2xl font-bold mb-5">Register Ticket</h1>
-    <div className="overflow-x-auto bg-[#FFE4D6] shadow-md rounded-lg">
+    <div className="overflow-x-auto bg-[#f8e5dc] shadow-md rounded-lg">
       <table className="w-full table-auto">
         <thead className="bg-gray-50 text-gray-600 uppercase text-sm leading-normal">
           <tr className="hidden md:table-row">
             <th className="py-3 px-6 text-left">Name</th>
             <th className="py-3 px-6 text-left">Email</th>
             <th className="py-3 px-6 text-left">Phone</th>
+            <th className="py-3 px-6 text-left">Seat</th>
+
             <th className="py-3 px-6 text-left">QR Code</th>
             <th className="py-3 px-6 text-left">Booked Date</th>
           </tr>
@@ -41,6 +43,10 @@ function ViewTicket() {
                 <td className="py-3 px-6 text-left md:table-cell block">
                   <div className="md:hidden font-bold mb-1">Phone:</div>
                   <span>{e.phone}</span>
+                </td>
+                <td className="py-3 px-6 text-left md:table-cell block">
+                  <div className="md:hidden font-bold mb-1">Seat:</div>
+                  <span>{e.seat_no}</span>
                 </td>
                 <td className="py-3 px-6 text-left md:table-cell block">
                   <div className="md:hidden font-bold mb-1">QR Code:</div>

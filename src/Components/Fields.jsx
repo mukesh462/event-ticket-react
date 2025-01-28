@@ -21,7 +21,7 @@ export const DateInput = ({ label, value, onChange, onBlur, error, name }) => {
         value={value ? dayjs(value, "DD-MM-YYYY") : null} // Correctly set the value
         status={error ? "error" : ""}
         autoComplete="off"
-        
+        style={{border: "1px solid black"}}
         placeholder="Select a date"
       />
       {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
@@ -86,10 +86,10 @@ export const SelectField = ({
       value={value}
       onChange={onChange}
       onBlur={onBlur}
-      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 ${
+      className={`w-full px-4 py-2 border  rounded-lg focus:ring-2 ${
         error
           ? "ring-red-500 border-red-500"
-          : "ring-orange-300 border-gray-300"
+          : "ring-orange-300 border"
       } focus:border-orange-300 outline-none`}
     >
       <option value="">Select Gender</option>
