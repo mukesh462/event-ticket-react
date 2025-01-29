@@ -65,7 +65,7 @@ export default function RegistrationForm() {
       err.inner.forEach((error) => {
         errors[error.path] = error.message;
       });
-      console.log(errors);
+      // console.log(errors);
       setErrors(errors);
       return false;
     }
@@ -73,7 +73,7 @@ export default function RegistrationForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const submitForm = async (tickets) => {
       Swal.fire({
         title: "Submitting...",
@@ -84,7 +84,7 @@ export default function RegistrationForm() {
           Swal.showLoading();
         },
       });
-  
+
       try {
         const apiResponse = await request("post", "buy-ticket", { tickets });
         if (apiResponse.status) {
@@ -102,7 +102,7 @@ export default function RegistrationForm() {
               navigate("/viewTicket");
             }
           });
-          console.log("API Response:", apiResponse);
+          // console.log("API Response:", apiResponse);
         } else {
           const errorMessage = apiResponse.duplicates
             ? `${apiResponse.message}\n${apiResponse.duplicates.toString()}`
@@ -123,7 +123,7 @@ export default function RegistrationForm() {
         console.error("API Call Failed:", error);
       }
     };
-  
+
     const confirmSubmission = async (tickets) => {
       const result = await Swal.fire({
         title: "Are you sure?",
@@ -137,24 +137,22 @@ export default function RegistrationForm() {
         await submitForm(tickets);
       }
     };
-  
+
     if (persons.length > 0) {
       await confirmSubmission(persons);
     } else if (await handleValidation()) {
       await confirmSubmission([formValues]);
     }
   };
-  
-
 
   const addPerson = async () => {
     if (await handleValidation()) {
-      const existEmail = persons.find((e) => e.email == formValues.email);
+      // const existEmail = persons.find((e) => e.email == formValues.email);
 
-      if (existEmail) {
-        toast.error("Email Already Exist");
-        return;
-      }
+      // if (existEmail) {
+      //   toast.error("Email Already Exist");
+      //   return;
+      // }
       setPersons([...persons, { ...formValues, id: makeId() }]);
       setFormValues(initForm);
       toast.success("Person added");
@@ -175,14 +173,14 @@ export default function RegistrationForm() {
   };
   const updatePerson = async () => {
     if (await handleValidation()) {
-      const existEmail = persons.find(
-        (e) => e.email == formValues.email && e.id != formValues.id
-      );
-      console.log(existEmail, formValues, "daada");
-      if (existEmail) {
-        toast.error("Email Already Exist");
-        return;
-      }
+      // const existEmail = persons.find(
+      //   (e) => e.email == formValues.email && e.id != formValues.id
+      // );
+      // console.log(existEmail, formValues, "daada");
+      // if (existEmail) {
+      //   toast.error("Email Already Exist");
+      //   return;
+      // }
       const removePerson = persons.filter((e) => e.id != formValues.id);
       setPersons([...removePerson, formValues]);
       setFormValues(initForm);
@@ -212,8 +210,7 @@ export default function RegistrationForm() {
       }
     });
   };
-const tickets =JSON.parse( localStorage.getItem('tickets')) ?? null;
-console.log(tickets)
+  const tickets = JSON.parse(localStorage.getItem("tickets")) ?? null;
   return (
     <div
       className="min-h-screen p-5 flex justify-center items-center"
@@ -226,13 +223,12 @@ console.log(tickets)
         {/* Header */}
         <div className="flex  justify-center md:justify-between items-center gap-3 mb-8">
           <div>
-               <img
-            src={Logo}
-            alt="Parambodil Foundation"
-            className="object-contain h-[60px] md:h-[70px]"
-          />
+            <img
+              src={Logo}
+              alt="Parambodil Foundation"
+              className="object-contain h-[60px] md:h-[70px]"
+            />
           </div>
-       
           <div className="text-center md:flex-1">
             <h1 className="text-xl md:text-4xl font-bold text-[#F85C2C]">
               Thaipoosam Event
@@ -241,12 +237,17 @@ console.log(tickets)
               Registration Form
             </h2>
           </div>
-          
-          <div className=" md:block" >
-            {
-tickets !=null? (<button className="bg-[#F85C2C] text-white rounded-sm p-1" onClick={()=> navigate('/viewTicket')}>Ticket</button>):null
-            }
-            </div> {/* Spacer for alignment */}
+          <div className=" md:block">
+            {tickets != null ? (
+              <button
+                className="bg-[#F85C2C] text-white rounded-sm p-1"
+                onClick={() => navigate("/viewTicket")}
+              >
+                Ticket
+              </button>
+            ) : null}
+          </div>{" "}
+          {/* Spacer for alignment */}
         </div>
 
         {/* Form */}
@@ -334,7 +335,7 @@ tickets !=null? (<button className="bg-[#F85C2C] text-white rounded-sm p-1" onCl
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <InputField
-                label="Occupation"
+                label="Specify Your Occupation"
                 name="occupation"
                 type="text"
                 value={formValues.occupation}

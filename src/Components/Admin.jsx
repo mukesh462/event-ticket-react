@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Logo from "../assets/logo-event.png";
-import { ScanQrCode } from "lucide-react";
+import { ScanQrCode, ShieldCheck, SquareUserRound } from "lucide-react";
 import TableList from "./Table";
 import QRCode from "react-qr-code";
 import dayjs from "dayjs";
@@ -11,12 +11,14 @@ import useApi from "./useApi";
 import toast from "react-hot-toast";
 import KeyValueTable from "./TableDetails";
 import { useNavigate } from "react-router-dom";
+import { Card, Col, Row, Statistic } from "antd";
 function Admin() {
   const apiUrl = "getAllTicket"; // Replace with your actual API URL
   const [modelOpen, setmodelOpen] = useState(false);
   const [QrReader, setQrReader] = useState(false);
   const [QrReaderView, setQrReaderView] = useState(false);
   const [ticketData, setticketData] = useState(null);
+  const [tableData, setTableData] = useState({});
   const navigate = useNavigate();
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userData"));
@@ -89,7 +91,7 @@ function Admin() {
       sortable: false,
       className: "",
       data: "dob",
-      render:(e)=> <span>{dayjs(e.dob).format("DD-MM-YYYY")}</span>
+      render: (e) => <span>{e.dob}</span>,
     },
     {
       colname: "Admit Status",
@@ -98,9 +100,13 @@ function Admin() {
       data: "admit_status",
       render: (val) =>
         val.admit_status == 1 ? (
-          <span className="bg-green-400 text-white p-2">Admit</span>
+          <span className="bg-green-400 text-white p-2  font-bold rounded-md">
+            Admit
+          </span>
         ) : (
-          <span className="bg-red-400 text-white p-2">Open</span>
+          <span className="bg-red-400 text-white p-2 font-bold rounded-md">
+            Open
+          </span>
         ),
     },
     {
@@ -116,7 +122,6 @@ function Admin() {
   const tableRef = useRef();
 
   const handleRowSelect = (data) => {
-    console.log("Selected Row Data:", data);
     setdata(data);
     // Add your logic for handling row clicks
   };
@@ -137,8 +142,6 @@ function Admin() {
     } catch (error) {
       toast.error(error);
     }
-
-    console.log(data, "sdsds");
   };
   const changeStatus = async () => {
     try {
@@ -151,14 +154,12 @@ function Admin() {
       } else {
         toast.error(response.message);
       }
-      handleRefresh()
+      handleRefresh();
       setQrReader(false);
       setQrReaderView(false);
     } catch (error) {
       toast.error(error);
     }
-
-    console.log(data, "sdsds");
   };
   const handleRefresh = () => {
     // console.log(tableRef.current)
@@ -175,7 +176,7 @@ function Admin() {
           width={70}
           height={70}
           className="object-contain cursor-pointer"
-          onClick={()=> navigate('/')}
+          onClick={() => navigate("/")}
         />
         <div>
           <ScanQrCode
@@ -184,13 +185,43 @@ function Admin() {
           />
         </div>
       </div>
+
       <div className="mt-8">
+        <div className="m-3">
+          <Row gutter={16}>
+            <Col span={12}>
+              <Card bordered={false}>
+                <Statistic
+                  title="Enrolled"
+                  value={tableData?.total_ticket}
+                  valueStyle={{
+                    color: "#3f8600",
+                  }}
+                  prefix={<SquareUserRound />}
+                />
+              </Card>
+            </Col>
+            <Col span={12}>
+              <Card bordered={false}>
+                <Statistic
+                  title="Admitted"
+                  value={tableData?.admit_ticket}
+                  prefix={<ShieldCheck />}
+                  valueStyle={{
+                    color: "#1677ff",
+                  }}
+                />
+              </Card>
+            </Col>
+          </Row>
+        </div>
         <TableList
           title="Ticket "
           apiUrl={apiUrl}
           config={config}
           onClickRow={handleRowSelect}
           ref={tableRef}
+          useData={setTableData}
         />
       </div>
       <ModalView
