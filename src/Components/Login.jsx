@@ -102,6 +102,7 @@ function Login() {
                     id="email"
                     placeholder="Email"
                     type="email"
+                    required
                     name="email"
                     onChange={handleChange}
                   />
@@ -120,6 +121,7 @@ function Login() {
                     id="password"
                     onChange={handleChange}
                     name="password"
+                    required
                     placeholder="Password"
                     type={showPassword ? "text" : "password"}
                   />
