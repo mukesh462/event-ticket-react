@@ -230,7 +230,7 @@ export default function RegistrationForm() {
             />
           </div>
           <div className="text-center md:flex-1">
-            <h1 className="text-xl md:text-4xl font-bold text-[#F85C2C]">
+            <h1 className="text-2xl md:text-4xl font-bold text-[#F85C2C]">
               Thaipoosam Event
             </h1>
             <h2 className="text-lg md:text-2xl md:mt-2 text-gray-600 pb-3 border-b-3 border-[#F85C2C] inline-block px-4">
@@ -391,11 +391,11 @@ export default function RegistrationForm() {
                   </span>
                 </h2>
               </div>
-              <div className="flex flex-wrap gap-4 my-6">
+              <div className="flex flex-wrap gap-4 my-6 mx-3">
                 {persons.map((e, i) => (
                   <div
                     key={i}
-                    className={`px-3 py-2 flex items-center gap-4  m-1 rounded-full bg-[#F85C2C] text-white`}
+                    className={`px-3 py-2 flex items-center gap-4   rounded-full bg-[#F85C2C] text-white`}
                   >
                     <div className="max-w-36 truncate">{e.name}</div>
                     <div className="flex justify-center items-center gap-1">
